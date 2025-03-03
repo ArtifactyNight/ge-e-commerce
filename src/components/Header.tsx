@@ -31,6 +31,7 @@ export default function Header() {
     { name: "สินค้า", href: "/#products" },
     { name: "เกี่ยวกับเรา", href: "/#about" },
     { name: "ติดต่อ", href: "/#contact" },
+    { name: "แอดมิน", href: "/admin" },
   ];
 
   useEffect(() => {
