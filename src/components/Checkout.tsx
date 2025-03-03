@@ -1,10 +1,26 @@
 "use client";
 
-import React, { useState } from "react";
+import { cva } from "class-variance-authority";
+import { Check, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 import { useCart } from "../context/CartContext";
 import { CheckoutForm } from "../types";
-import { Check, Loader2 } from "lucide-react";
+
+const inputVariants = cva(
+  "px-3 py-2 border  block w-full rounded-md border-gray-300 focus:border-green-500 focus:ring-green-500 sm:text-sm transition-colors",
+  {
+    variants: {
+      error: {
+        true: "border-red-300 bg-red-50",
+        false: "border-gray-300",
+      },
+    },
+    defaultVariants: {
+      error: false,
+    },
+  }
+);
 
 export default function Checkout() {
   const router = useRouter();
@@ -238,12 +254,17 @@ export default function Checkout() {
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
-                    className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm ${
-                      errors.name ? "border-red-300" : ""
-                    }`}
+                    placeholder="ชื่อจริง นามสกุล"
+                    autoComplete="name"
+                    required
+                    aria-invalid={errors.name ? "true" : "false"}
+                    aria-describedby={errors.name ? "name-error" : undefined}
+                    className={inputVariants({ error: !!errors.name })}
                   />
                   {errors.name && (
-                    <p className="mt-2 text-sm text-red-600">{errors.name}</p>
+                    <p className="mt-2 text-sm text-red-600" id="name-error">
+                      {errors.name}
+                    </p>
                   )}
                 </div>
               </div>
@@ -264,12 +285,17 @@ export default function Checkout() {
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
                     }
-                    className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm ${
-                      errors.email ? "border-red-300" : ""
-                    }`}
+                    placeholder="example@email.com"
+                    autoComplete="email"
+                    required
+                    aria-invalid={errors.email ? "true" : "false"}
+                    aria-describedby={errors.email ? "email-error" : undefined}
+                    className={inputVariants({ error: !!errors.email })}
                   />
                   {errors.email && (
-                    <p className="mt-2 text-sm text-red-600">{errors.email}</p>
+                    <p className="mt-2 text-sm text-red-600" id="email-error">
+                      {errors.email}
+                    </p>
                   )}
                 </div>
               </div>
@@ -290,12 +316,17 @@ export default function Checkout() {
                     onChange={(e) =>
                       setFormData({ ...formData, address: e.target.value })
                     }
-                    className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm ${
-                      errors.address ? "border-red-300" : ""
-                    }`}
+                    placeholder="ที่อยู่สำหรับจัดส่ง"
+                    autoComplete="street-address"
+                    required
+                    aria-invalid={errors.address ? "true" : "false"}
+                    aria-describedby={
+                      errors.address ? "address-error" : undefined
+                    }
+                    className={inputVariants({ error: !!errors.address })}
                   />
                   {errors.address && (
-                    <p className="mt-2 text-sm text-red-600">
+                    <p className="mt-2 text-sm text-red-600" id="address-error">
                       {errors.address}
                     </p>
                   )}
@@ -318,8 +349,15 @@ export default function Checkout() {
                     onChange={(e) =>
                       setFormData({ ...formData, city: e.target.value })
                     }
-                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                    placeholder="เมืองหรืออำเภอ"
+                    autoComplete="address-level2"
+                    className={inputVariants({ error: !!errors.city })}
                   />
+                  {errors.city && (
+                    <p className="mt-2 text-sm text-red-600" id="city-error">
+                      {errors.city}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -339,8 +377,18 @@ export default function Checkout() {
                     onChange={(e) =>
                       setFormData({ ...formData, postalCode: e.target.value })
                     }
-                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                    placeholder="รหัสไปรษณีย์"
+                    autoComplete="postal-code"
+                    className={inputVariants({ error: !!errors.postalCode })}
                   />
+                  {errors.postalCode && (
+                    <p
+                      className="mt-2 text-sm text-red-600"
+                      id="postalCode-error"
+                    >
+                      {errors.postalCode}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -360,12 +408,17 @@ export default function Checkout() {
                     onChange={(e) =>
                       setFormData({ ...formData, phone: e.target.value })
                     }
-                    className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm ${
-                      errors.phone ? "border-red-300" : ""
-                    }`}
+                    placeholder="เบอร์โทรศัพท์"
+                    autoComplete="tel"
+                    required
+                    aria-invalid={errors.phone ? "true" : "false"}
+                    aria-describedby={errors.phone ? "phone-error" : undefined}
+                    className={inputVariants({ error: !!errors.phone })}
                   />
                   {errors.phone && (
-                    <p className="mt-2 text-sm text-red-600">{errors.phone}</p>
+                    <p className="mt-2 text-sm text-red-600" id="phone-error">
+                      {errors.phone}
+                    </p>
                   )}
                 </div>
               </div>
