@@ -78,7 +78,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             <select
               id={`size-${product.id}`}
               value={selectedSize}
-              onChange={(e) => setSelectedSize(e.target.value)}
+              onChange={(e) => setSelectedSize(e.target.value as any)}
               className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-green-500 focus:outline-none focus:ring-green-500"
             >
               {product.packagingSizes.map((size) => (
