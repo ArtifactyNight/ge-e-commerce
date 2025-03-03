@@ -1,5 +1,7 @@
+"use client";
+
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import {
   ShoppingCart,
   Menu,
@@ -32,7 +34,7 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <Link to="/" className="flex items-center space-x-2">
+            <Link href="/" className="flex items-center space-x-2">
               <PalmTree className="h-8 w-8 text-green-600" />
               <span className="text-2xl font-bold text-green-600">มะเริง</span>
             </Link>
@@ -43,7 +45,7 @@ export default function Header() {
             {menuItems.map((item) => (
               <Link
                 key={item.name}
-                to={item.href}
+                href={item.href}
                 className="text-gray-700 hover:text-green-600 px-3 py-2 text-sm font-medium"
               >
                 {item.name}
@@ -65,7 +67,7 @@ export default function Header() {
             </button>
 
             <Link
-              to="/checkout"
+              href="/checkout"
               className="relative p-2 text-gray-700 hover:text-green-600"
             >
               <ShoppingCart className="h-6 w-6" />
@@ -112,7 +114,7 @@ export default function Header() {
               {menuItems.map((item) => (
                 <Link
                   key={item.name}
-                  to={item.href}
+                  href={item.href}
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-green-600 hover:bg-gray-50"
                 >
                   {item.name}

@@ -1,4 +1,6 @@
-import React from 'react';
+"use client";
+
+import React from "react";
 
 export default function Hero() {
   return (
@@ -12,8 +14,8 @@ export default function Hero() {
                 <span className="block text-green-600">จากต้นตาลมะเริง</span>
               </h1>
               <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                ค้นพบความหอมหวานของลูกตาลคุณภาพพรีเมียม 
-                จากแหล่งผลิตที่ยั่งยืน อุดมด้วยคุณค่าทางอาหาร จากชุมชนตำบลมะเริง
+                ค้นพบความหอมหวานของลูกตาลคุณภาพพรีเมียม จากแหล่งผลิตที่ยั่งยืน
+                อุดมด้วยคุณค่าทางอาหาร จากชุมชนตำบลมะเริง
               </p>
               <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                 <div className="rounded-md shadow">

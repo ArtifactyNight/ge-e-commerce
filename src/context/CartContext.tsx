@@ -1,5 +1,7 @@
-import React, { createContext, useContext, useReducer, useEffect } from "react";
-import { Product, CartItem } from "../types";
+"use client";
+
+import React, { createContext, useContext, useEffect, useReducer } from "react";
+import { CartItem, Product } from "../types";
 
 interface CartState {
   items: CartItem[];
@@ -25,6 +27,10 @@ const CartContext = createContext<
 
 // Load cart from localStorage
 const loadCartFromStorage = (): CartState => {
+  if (typeof window === "undefined") {
+    return { items: [], total: 0 };
+  }
+
   try {
     const savedCart = localStorage.getItem("cart");
     if (savedCart) {
@@ -115,9 +121,7 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
   return newState;
 };
 
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(
     cartReducer,
     undefined,
@@ -126,7 +130,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Save to localStorage whenever cart changes
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(state));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("cart", JSON.stringify(state));
+    }
   }, [state]);
 
   return (

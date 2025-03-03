@@ -1,11 +1,13 @@
+"use client";
+
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { useCart } from "../context/CartContext";
 import { CheckoutForm } from "../types";
 import { Check, Loader2 } from "lucide-react";
 
 export default function Checkout() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { state, dispatch } = useCart();
   const [formData, setFormData] = useState<CheckoutForm>({
     name: "",
@@ -84,15 +86,17 @@ export default function Checkout() {
       dispatch({ type: "CLEAR_CART" });
 
       // Save order to localStorage
-      const orders = JSON.parse(localStorage.getItem("orders") || "[]");
-      const newOrder = {
-        orderNumber: orderNum,
-        items: state.items,
-        total: cartTotal,
-        customer: formData,
-        date: new Date().toISOString(),
-      };
-      localStorage.setItem("orders", JSON.stringify([...orders, newOrder]));
+      if (typeof window !== "undefined") {
+        const orders = JSON.parse(localStorage.getItem("orders") || "[]");
+        const newOrder = {
+          orderNumber: orderNum,
+          items: state.items,
+          total: cartTotal,
+          customer: formData,
+          date: new Date().toISOString(),
+        };
+        localStorage.setItem("orders", JSON.stringify([...orders, newOrder]));
+      }
     } catch (error) {
       console.error("Error processing order:", error);
       // Handle error here
@@ -108,45 +112,22 @@ export default function Checkout() {
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <Check className="w-8 h-8 text-green-600" />
           </div>
-
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
             ขอบคุณสำหรับการสั่งซื้อ
           </h2>
-
-          <div className="mb-6">
-            <p className="text-gray-600 mb-2">หมายเลขคำสั่งซื้อของคุณคือ</p>
-            <p className="text-xl font-semibold text-green-600">
-              {orderNumber}
-            </p>
-          </div>
-
-          <div className="bg-gray-50 rounded-lg p-4 mb-6">
-            <h3 className="font-medium text-gray-900 mb-2">
-              รายละเอียดการจัดส่ง
-            </h3>
-            <p className="text-gray-600">{formData.name}</p>
-            <p className="text-gray-600">{formData.address}</p>
-            <p className="text-gray-600">{formData.phone}</p>
-          </div>
-
-          <div className="mb-6">
-            <p className="text-gray-600">คาดว่าจะได้รับสินค้าภายในวันที่</p>
-            <p className="font-medium text-gray-900">
-              {new Date(
-                Date.now() + 3 * 24 * 60 * 60 * 1000
-              ).toLocaleDateString("th-TH", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </p>
-          </div>
-
+          <p className="text-gray-600 mb-4">
+            คำสั่งซื้อหมายเลข:{" "}
+            <span className="font-medium">{orderNumber}</span>{" "}
+            ได้รับการยืนยันแล้ว
+          </p>
+          <p className="text-gray-600 mb-6">
+            เราจะส่งอีเมลยืนยันการสั่งซื้อพร้อมรายละเอียดการจัดส่งให้คุณ
+          </p>
           <button
-            onClick={() => navigate("/")}
-            className="inline-block bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700"
+            onClick={() => router.push("/")}
+            className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700"
           >
-            กลับสู่หน้าหลัก
+            กลับไปหน้าหลัก
           </button>
         </div>
       </div>
@@ -164,7 +145,7 @@ export default function Checkout() {
             กรุณาเลือกสินค้าก่อนดำเนินการชำระเงิน
           </p>
           <button
-            onClick={() => navigate("/")}
+            onClick={() => router.push("/")}
             className="inline-block bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700"
           >
             กลับไปเลือกสินค้า
@@ -175,143 +156,276 @@ export default function Checkout() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">ชำระเงิน</h2>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-5">
+        {/* Order summary */}
+        <div className="lg:col-span-2">
+          <div className="bg-white rounded-lg shadow-md p-6 sticky top-24">
+            <h2 className="text-lg font-medium text-gray-900 mb-4">
+              สรุปคำสั่งซื้อ
+            </h2>
+            {state.items.length === 0 ? (
+              <p className="text-gray-500">ไม่มีสินค้าในตะกร้า</p>
+            ) : (
+              <>
+                <div className="divide-y divide-gray-200">
+                  {state.items.map((item) => (
+                    <div
+                      key={item.product.id}
+                      className="py-4 flex items-center"
+                    >
+                      <img
+                        src={item.product.imageUrl}
+                        alt={item.product.name}
+                        className="h-16 w-16 object-cover rounded"
+                      />
 
-        <div className="mb-8">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">
-            สรุปรายการสั่งซื้อ
-          </h3>
-          <div className="border-t border-gray-200 pt-4">
-            {state.items.map((item) => (
-              <div key={item.product.id} className="flex justify-between py-2">
-                <span className="text-gray-600">
-                  {item.product.name} × {item.quantity}
-                  {item.selectedSize && ` (${item.selectedSize})`}
-                </span>
-                <span className="font-medium">
-                  ฿{getItemTotal(item).toFixed(2)}
-                </span>
-              </div>
-            ))}
-            <div className="border-t border-gray-200 mt-4 pt-4">
-              <div className="flex justify-between font-medium text-lg">
-                <span>ยอดรวมทั้งหมด</span>
-                <span>฿{cartTotal.toFixed(2)}</span>
-              </div>
-            </div>
+                      <div className="ml-4 flex-1">
+                        <h3 className="text-sm font-medium text-gray-900">
+                          {item.product.name}
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          {item.quantity} x ฿{getItemPrice(item).toFixed(2)}
+                          {item.selectedSize && ` / ${item.selectedSize}`}
+                        </p>
+                      </div>
+
+                      <div className="text-sm font-medium text-gray-900">
+                        ฿{getItemTotal(item).toFixed(2)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="border-t border-gray-200 pt-4 mt-4">
+                  <div className="flex justify-between text-base font-medium text-gray-900">
+                    <p>ยอดรวม</p>
+                    <p>฿{cartTotal.toFixed(2)}</p>
+                  </div>
+                  <p className="mt-0.5 text-sm text-gray-500">
+                    ค่าจัดส่งจะคำนวณในขั้นตอนถัดไป
+                  </p>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              ชื่อ-นามสกุล
-            </label>
-            <input
-              type="text"
-              id="name"
-              value={formData.name}
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
-              className={`mt-1 block w-full rounded-md shadow-sm ${
-                errors.name ? "border-red-300" : "border-gray-300"
-              } focus:border-green-500 focus:ring-green-500`}
-            />
-            {errors.name && (
-              <p className="mt-1 text-sm text-red-600">{errors.name}</p>
-            )}
-          </div>
-
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              อีเมล
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-              className={`mt-1 block w-full rounded-md shadow-sm ${
-                errors.email ? "border-red-300" : "border-gray-300"
-              } focus:border-green-500 focus:ring-green-500`}
-            />
-            {errors.email && (
-              <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-            )}
-          </div>
-
-          <div>
-            <label
-              htmlFor="address"
-              className="block text-sm font-medium text-gray-700"
-            >
-              ที่อยู่จัดส่ง
-            </label>
-            <textarea
-              id="address"
-              rows={3}
-              value={formData.address}
-              onChange={(e) =>
-                setFormData({ ...formData, address: e.target.value })
-              }
-              className={`mt-1 block w-full rounded-md shadow-sm ${
-                errors.address ? "border-red-300" : "border-gray-300"
-              } focus:border-green-500 focus:ring-green-500`}
-            />
-            {errors.address && (
-              <p className="mt-1 text-sm text-red-600">{errors.address}</p>
-            )}
-          </div>
-
-          <div>
-            <label
-              htmlFor="phone"
-              className="block text-sm font-medium text-gray-700"
-            >
-              เบอร์โทรศัพท์
-            </label>
-            <input
-              type="tel"
-              id="phone"
-              value={formData.phone}
-              onChange={(e) =>
-                setFormData({ ...formData, phone: e.target.value })
-              }
-              className={`mt-1 block w-full rounded-md shadow-sm ${
-                errors.phone ? "border-red-300" : "border-gray-300"
-              } focus:border-green-500 focus:ring-green-500`}
-            />
-            {errors.phone && (
-              <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
-            )}
-          </div>
-
-          <button
-            type="submit"
-            disabled={isProcessing}
-            className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 disabled:bg-green-400 disabled:cursor-not-allowed flex items-center justify-center"
+        {/* Checkout form */}
+        <div className="lg:col-span-3">
+          <form
+            onSubmit={handleSubmit}
+            className="bg-white rounded-lg shadow-md p-6"
           >
-            {isProcessing ? (
-              <>
-                <Loader2 className="animate-spin -ml-1 mr-3 h-5 w-5" />
-                กำลังดำเนินการ...
-              </>
-            ) : (
-              "ยืนยันการสั่งซื้อ"
-            )}
-          </button>
-        </form>
+            <h2 className="text-lg font-medium text-gray-900 mb-6">
+              ข้อมูลการจัดส่ง
+            </h2>
+
+            <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+              <div className="sm:col-span-2">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  ชื่อ-นามสกุล
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                    className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm ${
+                      errors.name ? "border-red-300" : ""
+                    }`}
+                  />
+                  {errors.name && (
+                    <p className="mt-2 text-sm text-red-600">{errors.name}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="sm:col-span-2">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  อีเมล
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
+                    className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm ${
+                      errors.email ? "border-red-300" : ""
+                    }`}
+                  />
+                  {errors.email && (
+                    <p className="mt-2 text-sm text-red-600">{errors.email}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="sm:col-span-2">
+                <label
+                  htmlFor="address"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  ที่อยู่
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="text"
+                    id="address"
+                    name="address"
+                    value={formData.address}
+                    onChange={(e) =>
+                      setFormData({ ...formData, address: e.target.value })
+                    }
+                    className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm ${
+                      errors.address ? "border-red-300" : ""
+                    }`}
+                  />
+                  {errors.address && (
+                    <p className="mt-2 text-sm text-red-600">
+                      {errors.address}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="city"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  เมือง / อำเภอ
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="text"
+                    id="city"
+                    name="city"
+                    value={formData.city}
+                    onChange={(e) =>
+                      setFormData({ ...formData, city: e.target.value })
+                    }
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="postalCode"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  รหัสไปรษณีย์
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="text"
+                    id="postalCode"
+                    name="postalCode"
+                    value={formData.postalCode}
+                    onChange={(e) =>
+                      setFormData({ ...formData, postalCode: e.target.value })
+                    }
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div className="sm:col-span-2">
+                <label
+                  htmlFor="phone"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  เบอร์โทรศัพท์
+                </label>
+                <div className="mt-1">
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={(e) =>
+                      setFormData({ ...formData, phone: e.target.value })
+                    }
+                    className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm ${
+                      errors.phone ? "border-red-300" : ""
+                    }`}
+                  />
+                  {errors.phone && (
+                    <p className="mt-2 text-sm text-red-600">{errors.phone}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                วิธีการชำระเงิน
+              </h3>
+              <div className="space-y-4">
+                <div className="flex items-center">
+                  <input
+                    id="payment-method-cod"
+                    name="payment-method"
+                    type="radio"
+                    defaultChecked
+                    className="h-4 w-4 border-gray-300 text-green-600 focus:ring-green-500"
+                  />
+                  <label
+                    htmlFor="payment-method-cod"
+                    className="ml-3 block text-sm font-medium text-gray-700"
+                  >
+                    เก็บเงินปลายทาง
+                  </label>
+                </div>
+                <div className="flex items-center">
+                  <input
+                    id="payment-method-transfer"
+                    name="payment-method"
+                    type="radio"
+                    className="h-4 w-4 border-gray-300 text-green-600 focus:ring-green-500"
+                  />
+                  <label
+                    htmlFor="payment-method-transfer"
+                    className="ml-3 block text-sm font-medium text-gray-700"
+                  >
+                    โอนเงินผ่านธนาคาร
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8">
+              <button
+                type="submit"
+                disabled={isProcessing}
+                className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 disabled:bg-green-400 disabled:cursor-not-allowed flex items-center justify-center"
+              >
+                {isProcessing ? (
+                  <>
+                    <Loader2 className="animate-spin -ml-1 mr-3 h-5 w-5" />
+                    กำลังดำเนินการ...
+                  </>
+                ) : (
+                  "ยืนยันการสั่งซื้อ"
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

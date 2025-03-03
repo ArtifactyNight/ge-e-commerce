@@ -1,12 +1,12 @@
 export interface PackagingSize {
-  size: '100g' | '250g' | '500g' | '1kg';
+  size: "100g" | "250g" | "500g" | "1kg";
   price: number;
 }
 
 export interface Product {
   id: string;
   name: string;
-  category: 'food' | 'crafts';
+  category: "food" | "crafts";
   basePrice: number;
   description: string;
   imageUrl: string;

@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { Product } from '../types';
-import { ShoppingCart, Star } from 'lucide-react';
-import { useCart } from '../context/CartContext';
+"use client";
+
+import React, { useState } from "react";
+import { Product } from "../types";
+import { ShoppingCart, Star } from "lucide-react";
+import { useCart } from "../context/CartContext";
 
 interface ProductCardProps {
   product: Product;
@@ -15,14 +17,14 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const getCurrentPrice = () => {
     if (!product.packagingSizes) return product.basePrice;
-    const size = product.packagingSizes.find(s => s.size === selectedSize);
+    const size = product.packagingSizes.find((s) => s.size === selectedSize);
     return size ? size.price : product.basePrice;
   };
 
   const handleAddToCart = () => {
     dispatch({
-      type: 'ADD_ITEM',
-      payload: { ...product, selectedSize }
+      type: "ADD_ITEM",
+      payload: { ...product, selectedSize },
     });
   };
 
@@ -50,20 +52,27 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
         )}
       </div>
-      
+
       <div className="p-4">
         <div className="flex justify-between items-start">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900">{product.name}</h3>
-            <p className="text-sm text-gray-500 capitalize">{product.category}</p>
+            <h3 className="text-lg font-semibold text-gray-900">
+              {product.name}
+            </h3>
+            <p className="text-sm text-gray-500 capitalize">
+              {product.category}
+            </p>
           </div>
         </div>
-        
+
         <p className="mt-2 text-sm text-gray-600">{product.description}</p>
 
         {product.packagingSizes && (
           <div className="mt-4">
-            <label htmlFor={`size-${product.id}`} className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor={`size-${product.id}`}
+              className="block text-sm font-medium text-gray-700"
+            >
               เลือกขนาด
             </label>
             <select
@@ -96,15 +105,21 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         <div className="mt-4 flex items-center space-x-2">
-          <span className={`inline-block w-3 h-3 rounded-full ${
-            product.stock > 50 ? 'bg-green-500' :
-            product.stock > 0 ? 'bg-yellow-500' :
-            'bg-red-500'
-          }`}></span>
+          <span
+            className={`inline-block w-3 h-3 rounded-full ${
+              product.stock > 50
+                ? "bg-green-500"
+                : product.stock > 0
+                ? "bg-yellow-500"
+                : "bg-red-500"
+            }`}
+          ></span>
           <span className="text-sm text-gray-600">
-            {product.stock > 50 ? 'มีสินค้า' :
-             product.stock > 0 ? `เหลือ ${product.stock} ชิ้น` :
-             'สินค้าหมด'}
+            {product.stock > 50
+              ? "มีสินค้า"
+              : product.stock > 0
+              ? `เหลือ ${product.stock} ชิ้น`
+              : "สินค้าหมด"}
           </span>
         </div>
       </div>
