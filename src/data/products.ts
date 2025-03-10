@@ -26,8 +26,7 @@ export const products: Product[] = [
     basePrice: 80,
     description:
       "น้ำตาลบริสุทธิ์ 100% จากต้นตาลโตนดธรรมชาติ หวานละมุน กลิ่นหอม",
-    imageUrl:
-      "https://www.baanmaha.com/blog/wp-content/uploads/2013/12/kratip.jpg",
+    imageUrl: "/images/water.jpeg",
     stock: 80,
     isNew: true,
     packagingSizes: [
