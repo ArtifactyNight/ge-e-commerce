@@ -360,28 +360,28 @@ export default function OrderManagement() {
         </select>
       </div>
 
-      <div className="flex space-x-6">
+      <div className="flex flex-col lg:flex-row lg:space-x-6 space-y-6 lg:space-y-0">
         {/* Orders list */}
-        <div className="w-1/2">
+        <div className="w-full lg:w-1/2">
           <h3 className="text-lg font-medium mb-4">รายการคำสั่งซื้อ</h3>
 
-          <div className="overflow-hidden border border-gray-100 rounded-md shadow-sm">
+          <div className="overflow-x-auto border border-gray-100 rounded-md shadow-sm">
             <table className="min-w-full divide-y divide-gray-100">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     ID
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     วันที่
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     ลูกค้า
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     ยอดรวม
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     สถานะ
                   </th>
                 </tr>
@@ -391,7 +391,7 @@ export default function OrderManagement() {
                   <tr>
                     <td
                       colSpan={5}
-                      className="px-4 py-4 text-center text-sm text-gray-500"
+                      className="px-2 sm:px-4 py-4 text-center text-sm text-gray-500"
                     >
                       ไม่พบรายการคำสั่งซื้อ
                     </td>
@@ -405,19 +405,19 @@ export default function OrderManagement() {
                         selectedOrder?.id === order.id ? "bg-indigo-50" : ""
                       }`}
                     >
-                      <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      <td className="px-2 sm:px-4 py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">
                         {order.id}
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-2 sm:px-4 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">
                         {order.date}
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-2 sm:px-4 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">
                         {order.customer.name}
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-2 sm:px-4 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">
                         ฿{order.total.toLocaleString()}
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap">
+                      <td className="px-2 sm:px-4 py-4 whitespace-nowrap">
                         <span
                           className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
                             order.status
@@ -435,17 +435,17 @@ export default function OrderManagement() {
         </div>
 
         {/* Order details */}
-        <div className="w-1/2">
+        <div className="w-full lg:w-1/2">
           <h3 className="text-lg font-medium mb-4">รายละเอียดคำสั่งซื้อ</h3>
 
           {!selectedOrder ? (
-            <div className="border border-gray-100 rounded-md p-6 text-center text-gray-500 shadow-sm">
+            <div className="border border-gray-100 rounded-md p-4 sm:p-6 text-center text-gray-500 shadow-sm">
               เลือกคำสั่งซื้อเพื่อดูรายละเอียด
             </div>
           ) : (
-            <div className="border border-gray-100 rounded-md p-6 shadow-sm">
+            <div className="border border-gray-100 rounded-md p-4 sm:p-6 shadow-sm">
               {/* Header */}
-              <div className="flex justify-between items-start mb-4">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 space-y-2 sm:space-y-0">
                 <div>
                   <h4 className="text-lg font-medium">{selectedOrder.id}</h4>
                   <p className="text-sm text-gray-500">
@@ -551,43 +551,51 @@ export default function OrderManagement() {
               {/* Customer info */}
               <div className="mb-4 pb-4 border-b border-gray-100">
                 <h5 className="font-medium mb-2">ข้อมูลลูกค้า</h5>
-                <p className="text-sm">{selectedOrder.customer.name}</p>
-                <p className="text-sm">{selectedOrder.customer.email}</p>
-                <p className="text-sm">{selectedOrder.customer.phone}</p>
-                <p className="text-sm">{selectedOrder.customer.address}</p>
+                <div className="space-y-1">
+                  <p className="text-sm">{selectedOrder.customer.name}</p>
+                  <p className="text-sm">{selectedOrder.customer.email}</p>
+                  <p className="text-sm">{selectedOrder.customer.phone}</p>
+                  <p className="text-sm break-words">
+                    {selectedOrder.customer.address}
+                  </p>
+                </div>
               </div>
 
               {/* Items */}
               <div className="mb-4 pb-4 border-b border-gray-100">
                 <h5 className="font-medium mb-2">รายการสินค้า</h5>
-                {selectedOrder.items.map((item, index) => (
-                  <div key={index} className="flex items-center py-2">
-                    <div className="w-10 h-10 flex-shrink-0 mr-3">
-                      <img
-                        src={item.product.imageUrl}
-                        alt={item.product.name}
-                        className="w-full h-full object-cover rounded-md"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src =
-                            "https://placehold.co/100x100?text=No+Image";
-                        }}
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">{item.product.name}</p>
-                      <p className="text-xs text-gray-500">
-                        {item.quantity} ชิ้น{" "}
-                        {item.selectedSize ? `(${item.selectedSize})` : ""}
+                <div className="space-y-3">
+                  {selectedOrder.items.map((item, index) => (
+                    <div key={index} className="flex items-center py-2">
+                      <div className="w-12 h-12 sm:w-10 sm:h-10 flex-shrink-0 mr-3">
+                        <img
+                          src={item.product.imageUrl}
+                          alt={item.product.name}
+                          className="w-full h-full object-cover rounded-md"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src =
+                              "https://placehold.co/100x100?text=No+Image";
+                          }}
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate">
+                          {item.product.name}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {item.quantity} ชิ้น{" "}
+                          {item.selectedSize ? `(${item.selectedSize})` : ""}
+                        </p>
+                      </div>
+                      <p className="text-sm font-medium ml-2">
+                        ฿
+                        {(
+                          item.product.basePrice * item.quantity
+                        ).toLocaleString()}
                       </p>
                     </div>
-                    <p className="text-sm font-medium">
-                      ฿
-                      {(
-                        item.product.basePrice * item.quantity
-                      ).toLocaleString()}
-                    </p>
-                  </div>
-                ))}
+                  ))}
+                </div>
 
                 <div className="flex justify-between mt-2 pt-2 border-t border-gray-100">
                   <p className="font-medium">ยอดรวม</p>
@@ -597,66 +605,9 @@ export default function OrderManagement() {
                 </div>
               </div>
 
-              {/* Payment details */}
-              <div className="mb-4 pb-4 border-b border-gray-100">
-                <h5 className="font-medium mb-2">การชำระเงิน</h5>
-                <p className="text-sm">
-                  วิธีการชำระเงิน: {selectedOrder.paymentMethod}
-                </p>
-                {selectedOrder.trackingNumber ? (
-                  <div className="flex items-center mt-1">
-                    <p className="text-sm">
-                      เลขติดตามพัสดุ: {selectedOrder.trackingNumber}
-                    </p>
-                    <button
-                      onClick={() => {
-                        setTrackingNumber(selectedOrder.trackingNumber || "");
-                        setIsTrackingModal(true);
-                        setIsModalOpen(true);
-                      }}
-                      className="ml-2 text-xs text-gray-500 hover:text-gray-700"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-                ) : (
-                  selectedOrder.status === "packing" && (
-                    <button
-                      onClick={() => {
-                        setTrackingNumber("");
-                        setIsTrackingModal(true);
-                        setIsModalOpen(true);
-                      }}
-                      className="mt-2 px-3 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700"
-                    >
-                      เพิ่มเลขติดตาม
-                    </button>
-                  )
-                )}
-                {selectedOrder.notes && (
-                  <p className="text-sm mt-2">
-                    หมายเหตุ: {selectedOrder.notes}
-                  </p>
-                )}
-              </div>
-
               {/* Actions */}
               <div>
                 <h5 className="font-medium mb-2">ดำเนินการ</h5>
-
                 <div className="flex flex-wrap gap-2">
                   {/* Update status buttons based on flow */}
                   {getNextPossibleStatuses(selectedOrder.status).map(
@@ -771,8 +722,8 @@ export default function OrderManagement() {
 
       {/* Modal for tracking number */}
       {isModalOpen && selectedOrder && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-96 shadow-md">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg p-4 sm:p-6 w-full max-w-md shadow-md">
             <h3 className="text-lg font-medium mb-4">
               {isTrackingModal
                 ? selectedOrder.trackingNumber
