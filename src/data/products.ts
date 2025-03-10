@@ -69,7 +69,7 @@ export const products: Product[] = [
     basePrice: 290,
     description: "หมวกสานจากใบตาล ระบายอากาศดี น้ำหนักเบา เหมาะกับทุกโอกาส",
     imageUrl:
-      "http://tour.smeswww.com/uploads/article/chiang_cfcc820ef4ef2ac1c829ff02fbf3f5af.jpg",
+      "https://down-th.img.susercontent.com/file/77b5b46f3ebced299d29a6c2cb71956b",
     stock: 45,
     isBestSeller: true,
   },
